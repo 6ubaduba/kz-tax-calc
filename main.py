@@ -62,12 +62,12 @@ def get_index():
                 margin-bottom: 20px;
             }
             .logo {
-                width: 76px;
-                height: 76px;
+                width: 80px;
+                height: 80px;
                 border-radius: 18px;
                 object-fit: cover;
                 box-shadow: 0 4px 12px rgba(0, 168, 204, 0.25);
-                margin-bottom: 10px;
+                margin-bottom: 12px;
             }
             .header h1 {
                 font-size: 20px;
