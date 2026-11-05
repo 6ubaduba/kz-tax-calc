@@ -2,7 +2,6 @@ import os
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
-from core import calculate_tax_details
 
 app = FastAPI()
 
@@ -11,6 +10,33 @@ class CalculationRequest(BaseModel):
     expense_with_vat: float = 0.0
     expense_without_vat: float = 0.0
     expense_no_docs: float = 0.0
+
+# Встроенная логика расчета налогов ОУР с НДС (без импорта из core.py)
+def calculate_tax_details(revenue: float, expense_with_vat: float, expense_without_vat: float, expense_no_docs: float):
+    # Выделение НДС 12% (12/112)
+    vat_output = revenue * (12.0 / 112.0)
+    rev_net = revenue - vat_output
+
+    vat_input = expense_with_vat * (12.0 / 112.0)
+    exp_vat_net = expense_with_vat - vat_input
+
+    vat_to_pay = max(0.0, vat_output - vat_input)
+
+    # Вычеты для ИПН (без учета НДС)
+    deductions = exp_vat_net + expense_without_vat
+    taxable_income = max(0.0, rev_net - deductions)
+    ipn_to_pay = taxable_income * 0.10
+
+    total_taxes = vat_to_pay + ipn_to_pay
+    total_spent = expense_with_vat + expense_without_vat + expense_no_docs
+    clean_cash = revenue - total_spent - total_taxes
+
+    return {
+        "vat_to_pay": vat_to_pay,
+        "ipn_to_pay": ipn_to_pay,
+        "total_taxes": total_taxes,
+        "clean_cash": clean_cash
+    }
 
 @app.get("/logo.png")
 def get_logo():
@@ -55,7 +81,7 @@ def get_index():
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Исключаем любой скролл */
+            overflow: hidden;
             background-color: var(--bg);
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
             color: var(--text);
@@ -80,7 +106,6 @@ def get_index():
             transition: all 0.25s ease;
         }
 
-        /* Шапка */
         .header {
             display: flex;
             align-items: center;
@@ -109,7 +134,6 @@ def get_index():
             margin: 2px 0 0 0;
         }
 
-        /* Блок полей ввода (в 1 колонку по умолчанию) */
         .inputs-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -164,7 +188,6 @@ def get_index():
             font-weight: 600;
         }
 
-        /* Кнопка */
         .btn-calc {
             width: 100%;
             height: 44px;
@@ -183,7 +206,6 @@ def get_index():
             opacity: 0.85;
         }
 
-        /* Результаты */
         .results-box {
             display: none;
             margin-top: 10px;
@@ -243,7 +265,7 @@ def get_index():
             font-weight: 700;
         }
 
-        /* КОМПАКТНЫЙ РЕЖИМ ПРИ НАЖАТИИ КНОПКИ */
+        /* Режим сжатия 2x2 после нажатия */
         .compact-mode .header {
             margin-bottom: 6px;
         }
@@ -258,7 +280,6 @@ def get_index():
         .compact-mode .header-info p {
             display: none;
         }
-        /* Перестройка в сетку 2x2 */
         .compact-mode .inputs-grid {
             grid-template-columns: 1fr 1fr;
             gap: 6px;
@@ -295,7 +316,6 @@ def get_index():
         </div>
     </div>
 
-    <!-- Сетка полей ввода -->
     <div class="inputs-grid">
         <div class="input-row">
             <label>1. Доход с НДС</label>
@@ -332,7 +352,6 @@ def get_index():
 
     <button class="btn-calc" id="calcBtn" onclick="calculate()">Рассчитать</button>
 
-    <!-- Блок результатов -->
     <div class="results-box" id="resBox">
         <div class="clean-banner">
             <span>На руки:</span>
@@ -367,7 +386,6 @@ def get_index():
     });
 
     async function calculate() {
-        // Прячем клавиатуру смартфона
         document.activeElement.blur();
 
         const payload = {
@@ -390,7 +408,6 @@ def get_index():
             document.getElementById('rIpn').innerText = fmt(d.ipn_to_pay);
             document.getElementById('rTotal').innerText = fmt(d.total_taxes);
 
-            // Переключаем в компактный режим 2х2 и показываем расчет
             document.getElementById('mainCard').classList.add('compact-mode');
             document.getElementById('resBox').style.display = 'block';
             document.getElementById('calcBtn').innerText = 'Пересчитать';
