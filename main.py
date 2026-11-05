@@ -50,297 +50,306 @@ def get_index():
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+        html, body {
             margin: 0;
-            padding: 12px 14px;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Исключаем любой скролл */
+            background-color: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            color: var(--text);
+        }
+
+        body {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
+            align-items: center;
+            padding: 8px;
         }
 
-        .app-card {
+        .card {
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             background: var(--card-bg);
-            border-radius: 24px;
-            padding: 16px 18px;
+            border-radius: 22px;
+            padding: 14px 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s ease;
         }
 
+        /* Шапка */
         .header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
+            gap: 10px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
         }
 
         .logo {
-            width: 46px;
-            height: 46px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
             object-fit: cover;
-            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+            transition: all 0.2s ease;
         }
 
-        .header-text h1 {
-            font-size: 17px;
-            font-weight: 700;
+        .header-info h1 {
+            font-size: 16px;
             margin: 0;
+            font-weight: 700;
         }
 
-        .header-text p {
-            font-size: 12px;
+        .header-info p {
+            font-size: 11px;
             color: var(--subtext);
             margin: 2px 0 0 0;
         }
 
-        /* Блок свернутых данных */
-        .compact-summary {
-            display: none;
-            background: #f8f9fa;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 10px 14px;
-            margin-bottom: 12px;
-            justify-content: space-between;
-            align-items: center;
+        /* Блок полей ввода (в 1 колонку по умолчанию) */
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            transition: all 0.25s ease;
         }
 
-        .compact-summary span {
-            font-size: 13px;
-            color: var(--subtext);
+        .input-row {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
-        .compact-summary strong {
-            font-size: 15px;
-            color: var(--text);
-            margin-left: 4px;
-        }
-
-        .btn-edit {
-            background: none;
-            border: none;
-            color: var(--accent);
-            font-size: 13px;
+        .input-row label {
+            font-size: 11px;
             font-weight: 600;
-            cursor: pointer;
-            padding: 4px 8px;
+            color: #636366;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Форма ввода */
-        .form-body {
-            transition: max-height 0.3s ease, opacity 0.2s ease;
-        }
-
-        .field {
-            margin-bottom: 10px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #48484a;
-            margin-bottom: 4px;
-        }
-
-        .field .input-box {
+        .box {
             position: relative;
             display: flex;
             align-items: center;
         }
 
-        .field input {
+        .box input {
             width: 100%;
-            height: 44px;
-            padding: 8px 36px 8px 14px;
-            font-size: 16px;
+            height: 40px;
+            padding: 0 28px 0 10px;
+            font-size: 15px;
             font-weight: 600;
+            background: #f9f9fb;
             border: 1.5px solid var(--border);
-            border-radius: 12px;
-            background-color: #f9f9fb;
+            border-radius: 10px;
             outline: none;
+            transition: all 0.2s ease;
         }
 
-        .field input:focus {
+        .box input:focus {
             border-color: var(--accent);
-            background-color: #ffffff;
+            background: #ffffff;
         }
 
-        .field .curr {
+        .box .sym {
             position: absolute;
-            right: 14px;
+            right: 8px;
+            font-size: 13px;
             color: var(--subtext);
             font-weight: 600;
         }
 
-        .btn-main {
+        /* Кнопка */
+        .btn-calc {
             width: 100%;
-            height: 48px;
-            background: linear-gradient(135deg, #007aff, #0056b3);
+            height: 44px;
+            background: var(--accent);
             color: #fff;
             border: none;
-            border-radius: 14px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 6px;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+            margin-top: 10px;
+            transition: all 0.2s ease;
         }
 
-        .btn-main:active {
+        .btn-calc:active {
             opacity: 0.85;
         }
 
-        /* Результаты во весь экран карточки */
-        .result-card {
+        /* Результаты */
+        .results-box {
             display: none;
-            animation: fadeIn 0.25s ease forwards;
+            margin-top: 10px;
+            background: #fbfbfd;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 10px 12px;
+            animation: fadeIn 0.25s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .hero-banner {
-            background: #f0fdf4;
-            border: 1.5px solid #bbf7d0;
-            border-radius: 16px;
-            padding: 14px;
-            text-align: center;
-            margin-bottom: 14px;
-        }
-
-        .hero-banner .title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #166534;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .hero-banner .amount {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--green);
-            margin-top: 4px;
-        }
-
-        .details-list {
-            background: #fbfbfd;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 12px 14px;
-        }
-
-        .row {
+        .clean-banner {
+            background: #eefdf2;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 8px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            margin-bottom: 8px;
+        }
+
+        .clean-banner span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #166534;
+        }
+
+        .clean-banner strong {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 12px;
+            color: #3a3a3c;
+        }
+
+        .data-row strong {
             font-size: 13px;
-            color: #48484a;
-        }
-
-        .row strong {
-            font-size: 14px;
-            color: var(--text);
-        }
-
-        .row.tax strong {
             color: var(--red);
         }
 
-        .row.divider {
+        .data-row.total {
             border-top: 1px dashed var(--border);
             margin-top: 4px;
-            padding-top: 10px;
+            padding-top: 6px;
+            font-weight: 700;
+        }
+
+        /* КОМПАКТНЫЙ РЕЖИМ ПРИ НАЖАТИИ КНОПКИ */
+        .compact-mode .header {
+            margin-bottom: 6px;
+        }
+        .compact-mode .logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+        }
+        .compact-mode .header-info h1 {
+            font-size: 13px;
+        }
+        .compact-mode .header-info p {
+            display: none;
+        }
+        /* Перестройка в сетку 2x2 */
+        .compact-mode .inputs-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        .compact-mode .input-row label {
+            font-size: 10px;
+        }
+        .compact-mode .box input {
+            height: 30px;
+            font-size: 12px;
+            padding: 0 20px 0 6px;
+            border-radius: 8px;
+        }
+        .compact-mode .box .sym {
+            font-size: 10px;
+            right: 6px;
+        }
+        .compact-mode .btn-calc {
+            height: 34px;
+            font-size: 13px;
+            margin-top: 6px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
-<div class="app-card">
+<div class="card" id="mainCard">
     <div class="header">
         <img src="/logo.png" alt="Лого" class="logo">
-        <div class="header-text">
+        <div class="header-info">
             <h1>Налоги РК • Калькулятор</h1>
-            <p>ИП на ОУР с НДС (12% / 10%)</p>
+            <p>ОУР с НДС (12% / 10%)</p>
         </div>
     </div>
 
-    <!-- Компактная плашка при показе результата -->
-    <div class="compact-summary" id="compactBar">
-        <div>
-            <span>Доход:</span>
-            <strong id="barRevenue">0 ₸</strong>
-        </div>
-        <button class="btn-edit" onclick="toggleEdit()">Изменить данные ✎</button>
-    </div>
-
-    <!-- Основная форма ввода -->
-    <div class="form-body" id="formInputs">
-        <div class="field">
-            <label>Доход с НДС</label>
-            <div class="input-box">
+    <!-- Сетка полей ввода -->
+    <div class="inputs-grid">
+        <div class="input-row">
+            <label>1. Доход с НДС</label>
+            <div class="box">
                 <input type="text" id="rev" inputmode="numeric" placeholder="0">
-                <span class="curr">₸</span>
+                <span class="sym">₸</span>
             </div>
         </div>
 
-        <div class="field">
-            <label>Расход с НДС (с документами)</label>
-            <div class="input-box">
+        <div class="input-row">
+            <label>2. Расход с НДС</label>
+            <div class="box">
                 <input type="text" id="exp_v" inputmode="numeric" placeholder="0">
-                <span class="curr">₸</span>
+                <span class="sym">₸</span>
             </div>
         </div>
 
-        <div class="field">
-            <label>Расход без НДС (акты, ЭСФ)</label>
-            <div class="input-box">
+        <div class="input-row">
+            <label>3. Расход без НДС</label>
+            <div class="box">
                 <input type="text" id="exp_nv" inputmode="numeric" placeholder="0">
-                <span class="curr">₸</span>
+                <span class="sym">₸</span>
             </div>
         </div>
 
-        <div class="field">
-            <label>Расход без документов (невычет)</label>
-            <div class="input-box">
+        <div class="input-row">
+            <label>4. Без документов</label>
+            <div class="box">
                 <input type="text" id="exp_nd" inputmode="numeric" placeholder="0">
-                <span class="curr">₸</span>
+                <span class="sym">₸</span>
             </div>
         </div>
-
-        <button class="btn-main" onclick="calculate()">Рассчитать</button>
     </div>
 
-    <!-- Результаты (занимают всё окно без прокрутки) -->
-    <div class="result-card" id="resultsView">
-        <div class="hero-banner">
-            <div class="title">Чистый остаток на руках</div>
-            <div class="amount" id="resClean">0 ₸</div>
+    <button class="btn-calc" id="calcBtn" onclick="calculate()">Рассчитать</button>
+
+    <!-- Блок результатов -->
+    <div class="results-box" id="resBox">
+        <div class="clean-banner">
+            <span>На руки:</span>
+            <strong id="rClean">0 ₸</strong>
         </div>
 
-        <div class="details-list">
-            <div class="row tax">
-                <span>НДС к уплате (12%):</span>
-                <strong id="resVat">0 ₸</strong>
-            </div>
-            <div class="row tax">
-                <span>ИПН (10% с чистой прибыли):</span>
-                <strong id="resIpn">0 ₸</strong>
-            </div>
-            <div class="row divider tax">
-                <span style="font-weight: 600; color: var(--text);">Всего налогов в бюджет:</span>
-                <strong style="font-size: 15px;" id="resTotalTax">0 ₸</strong>
-            </div>
+        <div class="data-row">
+            <span>НДС (12%):</span>
+            <strong id="rVat">0 ₸</strong>
+        </div>
+        <div class="data-row">
+            <span>ИПН (10%):</span>
+            <strong id="rIpn">0 ₸</strong>
+        </div>
+        <div class="data-row total">
+            <span style="color: var(--text);">Всего налогов:</span>
+            <strong id="rTotal">0 ₸</strong>
         </div>
     </div>
 </div>
@@ -358,6 +367,9 @@ def get_index():
     });
 
     async function calculate() {
+        // Прячем клавиатуру смартфона
+        document.activeElement.blur();
+
         const payload = {
             revenue: clean(document.getElementById('rev').value),
             expense_with_vat: clean(document.getElementById('exp_v').value),
@@ -371,28 +383,20 @@ def get_index():
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            const data = await res.json();
+            const d = await res.json();
 
-            // Заполняем данные
-            document.getElementById('barRevenue').innerText = fmt(payload.revenue);
-            document.getElementById('resClean').innerText = fmt(data.clean_cash);
-            document.getElementById('resVat').innerText = fmt(data.vat_to_pay);
-            document.getElementById('resIpn').innerText = fmt(data.ipn_to_pay);
-            document.getElementById('resTotalTax').innerText = fmt(data.total_taxes);
+            document.getElementById('rClean').innerText = fmt(d.clean_cash);
+            document.getElementById('rVat').innerText = fmt(d.vat_to_pay);
+            document.getElementById('rIpn').innerText = fmt(d.ipn_to_pay);
+            document.getElementById('rTotal').innerText = fmt(d.total_taxes);
 
-            // Сворачиваем форму и открываем результат во весь экран
-            document.getElementById('formInputs').style.display = 'none';
-            document.getElementById('compactBar').style.display = 'flex';
-            document.getElementById('resultsView').style.display = 'block';
+            // Переключаем в компактный режим 2х2 и показываем расчет
+            document.getElementById('mainCard').classList.add('compact-mode');
+            document.getElementById('resBox').style.display = 'block';
+            document.getElementById('calcBtn').innerText = 'Пересчитать';
         } catch(e) {
             alert('Ошибка расчета: ' + e);
         }
-    }
-
-    function toggleEdit() {
-        document.getElementById('formInputs').style.display = 'block';
-        document.getElementById('compactBar').style.display = 'none';
-        document.getElementById('resultsView').style.display = 'none';
     }
 </script>
 
